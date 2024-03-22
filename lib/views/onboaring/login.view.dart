@@ -202,7 +202,7 @@ class _LoginViewState extends State<LoginView> {
                   onDoubleTap: () {
                     _authenticateWithBiometrics(context);
                   },
-                  label: "Login with Face ID",
+                  label: "Login with Finger print",
                 ),
               ],
             ),
