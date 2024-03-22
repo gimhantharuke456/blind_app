@@ -1,10 +1,12 @@
+import 'package:blind_app/controllers/dbconnect.dart';
+import 'package:blind_app/controllers/order.controller.dart';
 import 'package:blind_app/controllers/speech.controller.dart';
 import 'package:blind_app/controllers/voice.controller.dart';
 import 'package:blind_app/models/order.model.dart';
 import 'package:blind_app/providers/order.provder.dart';
 import 'package:blind_app/utils/index.dart';
 import 'package:blind_app/views/home/item.list.view.dart';
-import 'package:blind_app/views/order/delivery.instructions.view.dart';
+
 import 'package:blind_app/widgets/input_field.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -22,8 +24,12 @@ class _OrderViewState extends State<OrderView> {
   final TextEditingController _deliveryDetailsController =
       TextEditingController();
   final SpeechController speechController = SpeechController();
+  late DbConnect _dbConnect;
+
   @override
   void initState() {
+    _dbConnect = DbConnect();
+    _dbConnect.open();
     super.initState();
 
     _voiceController.speek(
@@ -62,14 +68,26 @@ class _OrderViewState extends State<OrderView> {
               message: _deliveryDetailsController.text);
         },
         onLongPress: () async {
+          final OrderController _orderController =
+              OrderController(_dbConnect.db);
+
+          for (var item in widget.order.items) {
+            await _orderController.createOrder({
+              "itemName": item.name,
+              "description": item.description,
+              "price": item.price,
+              "userId": "userId"
+            });
+          }
           if (_deliveryDetailsController.text.isNotEmpty) {
             orderProvider.addOrder(widget.order);
             await _voiceController
                 .speek(
                     message:
                         'Order placed successfully. Navigating back to item list')
-                .then((value) => context.navigator(context, ItemListView(),
-                    shouldBack: false));
+                .then((value) => Future.delayed(const Duration(seconds: 1))
+                    .then((value) => context.navigator(context, ItemListView(),
+                        shouldBack: false)));
           } else {
             await _voiceController.speek(
                 message: 'Please add delivery details');

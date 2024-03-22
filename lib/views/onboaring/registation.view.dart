@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:blind_app/controllers/auth.controller.dart';
 import 'package:blind_app/controllers/dbconnect.dart';
 import 'package:blind_app/controllers/speech.controller.dart';
@@ -179,11 +177,12 @@ class _LoginViewState extends State<RegistrationView> {
                     phone: phoneNumber.text,
                     shippingAddress: city.text,
                   );
+                  // context.navigator(context, ItemListView());
                   DbConnect _db = DbConnect();
                   _db.open().then((value) async {
                     var userCollection = await _db.getUsersCollection();
                     final _userController = UserController(userCollection);
-                    print("user controller intialized");
+
                     await _userController.createUser(user).then(
                         (value) => context.navigator(context, ItemListView()));
                   });

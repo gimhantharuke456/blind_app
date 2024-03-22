@@ -84,7 +84,7 @@ class _LoginViewState extends State<LoginView> {
       await _voiceController.speek(message: "Please , enter password!");
       return;
     }
-    final DbConnect connect = DbConnect();
+
     await dbConnect.open();
     var userCollection = await dbConnect.getUsersCollection();
     final UserController controller = UserController(userCollection);

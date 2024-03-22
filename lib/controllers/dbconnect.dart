@@ -5,11 +5,11 @@ import 'package:mongo_dart/mongo_dart.dart';
 class DbConnect {
   static late Db _db;
 
-  DbConnect() {}
+  Db get db => _db;
 
   Future<void> open() async {
     _db = await Db.create(
-        "mongodb+srv://root:root@blindapp.rkpesgt.mongodb.net/test");
+        "mongodb+srv://root:root@cluster0.zekgg7g.mongodb.net/blind");
     await _db.open();
 
     inspect(_db);
