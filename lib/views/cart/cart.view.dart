@@ -1,4 +1,6 @@
+import 'package:blind_app/controllers/voice.navigator.controller.dart';
 import 'package:blind_app/providers/cart.provider.dart';
+import 'package:blind_app/utils/index.dart';
 import 'package:blind_app/views/home/item.list.view.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -52,7 +54,10 @@ class CartView extends StatelessWidget {
             message:
                 'Item details: ${item.name}, ${item.description}, \$${item.price}');
       },
-      onLongPress: () {},
+      onLongPress: () {
+        final _navigator = VoiceNavigator(buildContext: context);
+        _navigator.startVoiceNavigation();
+      },
       child: Container(
         width: MediaQuery.of(context).size.width,
         height: MediaQuery.of(context).size.height,

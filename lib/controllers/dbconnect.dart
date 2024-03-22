@@ -1,15 +1,18 @@
+import 'dart:developer';
+
 import 'package:mongo_dart/mongo_dart.dart';
 
 class DbConnect {
   static late Db _db;
-  late String uri;
-  DbConnect(String u) {
-    uri = u;
-  }
+
+  DbConnect() {}
 
   Future<void> open() async {
-    _db = await Db.create(uri);
+    _db = await Db.create(
+        "mongodb+srv://root:root@blindapp.rkpesgt.mongodb.net/test");
     await _db.open();
+
+    inspect(_db);
   }
 
   Future<void> close() async {

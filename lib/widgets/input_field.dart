@@ -7,7 +7,7 @@ class InputFieldCustom extends StatefulWidget {
   final TextEditingController? controller;
   final void Function(String)? onVoiceInput;
   final VoidCallback? onTap;
-
+  final FocusNode? focusNode;
   const InputFieldCustom({
     Key? key,
     required this.hintText,
@@ -15,6 +15,7 @@ class InputFieldCustom extends StatefulWidget {
     this.isTextArea = false, // Default to single-line text input
     this.controller,
     this.onVoiceInput,
+    this.focusNode,
     this.onTap,
   }) : super(key: key);
 
@@ -24,19 +25,11 @@ class InputFieldCustom extends StatefulWidget {
 
 class _InputFieldCustomState extends State<InputFieldCustom> {
   late TextEditingController _controller;
-  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller ?? TextEditingController();
-    _focusNode.addListener(_handleFocusChange);
-  }
-
-  void _handleFocusChange() {
-    if (_focusNode.hasFocus) {
-      print('Input field focused, ready for voice input');
-    }
   }
 
   @override
@@ -44,7 +37,7 @@ class _InputFieldCustomState extends State<InputFieldCustom> {
     if (widget.controller == null) {
       _controller.dispose();
     }
-    _focusNode.dispose();
+
     super.dispose();
   }
 
@@ -54,8 +47,9 @@ class _InputFieldCustomState extends State<InputFieldCustom> {
       onTap: () {
         widget.onTap?.call();
       },
+
       controller: _controller,
-      focusNode: _focusNode,
+      focusNode: widget.focusNode,
       obscureText: widget.isPassword,
       maxLines: widget.isTextArea
           ? null

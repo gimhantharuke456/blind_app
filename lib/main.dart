@@ -3,14 +3,10 @@ import 'package:blind_app/providers/order.provder.dart';
 import 'package:blind_app/providers/shoppinglist.provider.dart';
 import 'package:blind_app/views/onboaring/login.view.dart';
 import 'package:flutter/material.dart';
-import 'package:mongo_dart/mongo_dart.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  var db = await Db.create(
-      "mongodb+srv://root:root@blindapp.rkpesgt.mongodb.net/test");
-  await db.open();
 
   runApp(const MyApp());
 }

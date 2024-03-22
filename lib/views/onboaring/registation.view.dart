@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:blind_app/controllers/auth.controller.dart';
+import 'package:blind_app/controllers/dbconnect.dart';
 import 'package:blind_app/controllers/speech.controller.dart';
+import 'package:blind_app/controllers/user.controller.dart';
 import 'package:blind_app/controllers/voice.controller.dart';
+import 'package:blind_app/models/user.model.dart';
 import 'package:blind_app/utils/index.dart';
 import 'package:blind_app/views/home/item.list.view.dart';
 import 'package:blind_app/views/onboaring/select.theme.view.dart';
@@ -165,7 +170,23 @@ class _LoginViewState extends State<RegistrationView> {
                     );
                     return;
                   }
-                  context.navigator(context, ItemListView());
+                  User user = User(
+                    id: null,
+                    username: username.text,
+                    email: username.text,
+                    password: password.text,
+                    billingAddress: address.text,
+                    phone: phoneNumber.text,
+                    shippingAddress: city.text,
+                  );
+                  DbConnect _db = DbConnect();
+                  _db.open().then((value) async {
+                    var userCollection = await _db.getUsersCollection();
+                    final _userController = UserController(userCollection);
+                    print("user controller intialized");
+                    await _userController.createUser(user).then(
+                        (value) => context.navigator(context, ItemListView()));
+                  });
                 },
                 label: "Register",
               ),

@@ -39,7 +39,6 @@ class _OrderViewState extends State<OrderView> {
 
   void _handleVoiceInput() {
     speechController.startListening(onResult: (text) {
-      print(text);
       setState(() {
         _deliveryDetailsController.text = text;
       });
@@ -63,14 +62,18 @@ class _OrderViewState extends State<OrderView> {
               message: _deliveryDetailsController.text);
         },
         onLongPress: () async {
-          orderProvider.addOrder(widget.order);
-          await _voiceController
-              .speek(
-                  message:
-                      'Order placed successfully.Navigating back to item list')
-              .then((value) => context.navigator(
-                  context, const DeliverInstructionsView(),
-                  shouldBack: false));
+          if (_deliveryDetailsController.text.isNotEmpty) {
+            orderProvider.addOrder(widget.order);
+            await _voiceController
+                .speek(
+                    message:
+                        'Order placed successfully. Navigating back to item list')
+                .then((value) => context.navigator(context, ItemListView(),
+                    shouldBack: false));
+          } else {
+            await _voiceController.speek(
+                message: 'Please add delivery details');
+          }
         },
         child: Container(
           width: MediaQuery.of(context).size.width,
