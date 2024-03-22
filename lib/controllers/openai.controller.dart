@@ -1,6 +1,6 @@
 import 'package:chat_gpt_sdk/chat_gpt_sdk.dart';
 
-const String apiKey = "sk-";
+const String apiKey = "";
 
 class OpenAiController {
   final _openAi = OpenAI.instance.build(
