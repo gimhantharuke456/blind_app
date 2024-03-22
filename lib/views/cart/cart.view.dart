@@ -26,7 +26,6 @@ class CartView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
         elevation: 0,
         title: Text('Cart'),
       ),

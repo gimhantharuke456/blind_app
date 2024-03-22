@@ -1,12 +1,13 @@
 import 'package:blind_app/controllers/voice.controller.dart';
 import 'package:blind_app/controllers/voice.navigator.controller.dart';
 import 'package:blind_app/models/order.model.dart';
+import 'package:blind_app/models/order.mongo.model.dart';
 import 'package:blind_app/providers/cart.provider.dart';
 import 'package:blind_app/providers/order.provder.dart';
 import 'package:blind_app/providers/shoppinglist.provider.dart';
+import 'package:blind_app/utils/index.dart';
 import 'package:blind_app/views/order/order.view.dart';
 import 'package:flutter/material.dart';
-import 'package:blind_app/utils/index.dart';
 import 'package:provider/provider.dart';
 
 final List<Item> items = [
@@ -64,9 +65,8 @@ class _ItemListViewState extends State<ItemListView> {
     VoiceNavigator voiceNavigator = VoiceNavigator(buildContext: context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.grey,
         elevation: 0,
-        title: Text('Item List'),
+        title: const Text('Item List'),
         automaticallyImplyLeading: false,
       ),
       body: PageView.builder(
@@ -83,13 +83,13 @@ class _ItemListViewState extends State<ItemListView> {
       Item item, BuildContext context, VoiceNavigator navigator) {
     final cartProvider = Provider.of<CartProvider>(context);
     final shoppingItemListProvider = Provider.of<ShoppingListProvider>(context);
-    final orderProvider = Provider.of<OrderProvider>(context);
+
     void buyItem() {
-      Order order = Order(
-          id: orderProvider.orders.length + 1,
-          items: [item],
-          totalPrice: item.price,
-          dateTime: DateTime.now());
+      OrderMongoModel order = OrderMongoModel(
+          itemName: item.name,
+          description: item.description,
+          price: item.price,
+          userId: "userId");
       context.navigator(context, OrderView(order: order));
     }
 

@@ -6,12 +6,14 @@ import 'package:blind_app/controllers/voice.controller.dart';
 import 'package:blind_app/models/user.model.dart';
 import 'package:blind_app/utils/index.dart';
 import 'package:blind_app/views/home/item.list.view.dart';
+import 'package:blind_app/views/onboaring/login.view.dart';
 import 'package:blind_app/views/onboaring/select.theme.view.dart';
 import 'package:blind_app/widgets/custom_button.dart';
 import 'package:blind_app/widgets/input_field.dart';
 import 'package:blind_app/widgets/page_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegistrationView extends StatefulWidget {
   const RegistrationView({super.key});
@@ -183,8 +185,15 @@ class _LoginViewState extends State<RegistrationView> {
                     var userCollection = await _db.getUsersCollection();
                     final _userController = UserController(userCollection);
 
-                    await _userController.createUser(user).then(
-                        (value) => context.navigator(context, ItemListView()));
+                    await _userController.createUser(user).then((value) async {
+                      SharedPreferences prefs =
+                          await SharedPreferences.getInstance();
+                      prefs.setString("uid", username.text);
+                      _voiceController.speek(
+                          message: "You have succesfully logged in");
+                      Future.delayed(const Duration(seconds: 2)).then((value) =>
+                          context.navigator(context, ItemListView()));
+                    });
                   });
                 },
                 label: "Register",
@@ -212,8 +221,57 @@ class _LoginViewState extends State<RegistrationView> {
                     message: "Add theme button",
                   );
                 },
-                onDoubleTap: () {
-                  context.navigator(context, const SelectThemeView());
+                onDoubleTap: () async {
+                  if (username.text.isEmpty) {
+                    await _voiceController.speek(
+                      message: "Please enter a username!",
+                    );
+                    return;
+                  }
+                  if (password.text.isEmpty) {
+                    await _voiceController.speek(
+                      message: "Please enter a password!",
+                    );
+                    return;
+                  }
+                  if (city.text.isEmpty) {
+                    await _voiceController.speek(
+                      message: "Please enter a city!",
+                    );
+                    return;
+                  }
+                  if (name.text.isEmpty) {
+                    await _voiceController.speek(
+                      message: "Please enter a name!",
+                    );
+                    return;
+                  }
+                  if (phoneNumber.text.isEmpty) {
+                    await _voiceController.speek(
+                      message: "Please enter a phone number!",
+                    );
+                    return;
+                  }
+                  if (address.text.isEmpty) {
+                    await _voiceController.speek(
+                      message: "Please enter an address!",
+                    );
+                    return;
+                  }
+                  User user = User(
+                    id: null,
+                    username: username.text,
+                    email: username.text,
+                    password: password.text,
+                    billingAddress: address.text,
+                    phone: phoneNumber.text,
+                    shippingAddress: city.text,
+                  );
+                  context.navigator(
+                      context,
+                      SelectThemeView(
+                        user: user,
+                      ));
                 },
                 label: "Add Theme",
               ),
@@ -227,7 +285,7 @@ class _LoginViewState extends State<RegistrationView> {
                   );
                 },
                 onDoubleTap: () {
-                  context.navigator(context, const RegistrationView());
+                  context.navigator(context, const LoginView());
                 },
                 label: "Already have an account? Login now",
               ),

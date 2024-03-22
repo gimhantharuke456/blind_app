@@ -10,8 +10,13 @@ class OrderController {
   }
 
   Future<List<Map<String, dynamic>>> getAllOrders() async {
-    final orders = await _ordersCollection.find().toList();
-    return orders.map((e) => e as Map<String, dynamic>).toList();
+    try {
+      final orders = await _ordersCollection.find().toList();
+      return orders.map((e) => e as Map<String, dynamic>).toList();
+    } catch (e) {
+      print("get orders failed $e");
+      return [];
+    }
   }
 
   Future<Map<String, dynamic>?> getOrderById(String orderId) async {

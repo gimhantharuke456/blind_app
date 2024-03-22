@@ -39,7 +39,6 @@ class _DeliverInstructionsViewState extends State<DeliverInstructionsView> {
       child: Scaffold(
         appBar: AppBar(
           title: Text("Card Details"),
-          backgroundColor: Colors.grey,
           elevation: 0,
         ),
         body: Center(

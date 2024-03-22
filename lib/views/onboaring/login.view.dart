@@ -12,6 +12,7 @@ import 'package:blind_app/widgets/input_field.dart';
 import 'package:blind_app/widgets/page_title.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -37,7 +38,7 @@ class _LoginViewState extends State<LoginView> {
     _usernameFocusNode = FocusNode();
     _passwordFocusNode = FocusNode();
     _speechController = SpeechController();
-    _openAiController.extractInformation("user name is dimuth123 ");
+
     try {
       _speechController.initialize().then((value) {});
     } catch (e) {
@@ -49,7 +50,6 @@ class _LoginViewState extends State<LoginView> {
 
   void _startListeningForNavigationCommands() {
     _speechController.startListening(onResult: (result) async {
-      print(result);
       if (result.contains('register')) {
         _speechController.stopListening();
         Navigator.push(
@@ -89,7 +89,7 @@ class _LoginViewState extends State<LoginView> {
     var userCollection = await dbConnect.getUsersCollection();
     final UserController controller = UserController(userCollection);
     try {
-      await controller.login(username.text, password.text).then((value) {
+      await controller.login(username.text, password.text).then((value) async {
         if (value == null) {
           _voiceController.speek(message: "Login failed please try again");
           setState(() {
@@ -97,6 +97,8 @@ class _LoginViewState extends State<LoginView> {
             password.clear();
           });
         } else {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          prefs.setString("uid", value.email);
           context.navigator(context, ItemListView());
         }
       });
